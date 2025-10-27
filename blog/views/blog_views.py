@@ -1,36 +1,31 @@
-from django.shortcuts import redirect, render
-from .models import Blog
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-import markdown
+from ..models.blog_model import Blog
 
-class LogginRequiredMixin:
-    """Mixin to ensure the user is logged in."""
-    def dispatch(self, request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('accounts:register')
-        return super().dispatch(request, *args, **kwargs)
-
-class BlogListView(ListView):
+class BlogIndex(ListView):
     model = Blog
-    template_name = 'blog/blog_list.html'
+    template_name = 'blog/blog_index.html'
     context_object_name = 'blogs'
     paginate_by = 10
+    
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        return qs.only('id', 'title', 'created_at').order_by('-created_at')
     
 class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blog/blog_detail.html'
     context_object_name = 'blog'
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['blog'].content = markdown.markdown(context['blog'].content, extensions=['fenced_code', 'codehilite'])
-        return context
         
 class BlogCreateView(CreateView):
     model = Blog
     template_name = 'blog/blog_form.html'
     fields = ['title', 'content']
     success_url = '/blogs/'
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        print("Blog created by:", form.instance.author)
+        return super().form_valid(form)
     
 class BlogUpdateView(UpdateView):
     model = Blog

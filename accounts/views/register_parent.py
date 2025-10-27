@@ -24,4 +24,4 @@ def register_parent_view(request):
         apellido_materno=form.cleaned_data.get("apellido_materno", ""),
         profile_model=ProfileParent
     )
-    return redirect("/admin/login/")  # luego apuntará a tu login propio
+    return redirect("accounts:login")  # luego apuntará a tu login propio

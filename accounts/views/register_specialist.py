@@ -25,4 +25,4 @@ def register_specialist_view(request):
         profile_model=ProfileSpecialist,
         profile_kwargs={"cedula_profesional": form.cleaned_data["cedula_profesional"]}
     )
-    return redirect("/admin/login/")
+    return redirect("accounts:login")

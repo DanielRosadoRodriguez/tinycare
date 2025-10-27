@@ -2,6 +2,8 @@
 
 {%for blog in blogs %}
     <a href="{% url 'blogs:blog-detail' blog.pk %}"><p>{{ blog.title }}</p></a>
+    <p>Created at: {{ blog.created_at }}</p>
+    
 {% empty %}
     <p>No blogs available.</p>
 {% endfor %}

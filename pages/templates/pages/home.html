@@ -20,16 +20,20 @@
 
           <!-- CTAs actualizados -->
           <div class="d-flex flex-wrap gap-3">
-            <a class="btn btn-primary btn-lg px-4" href="{% url 'accounts:register_specialist' %}">
-              Registrar especialista
-            </a>
-            <a class="btn btn-outline-primary btn-lg px-4" href="{% url 'accounts:register_parent' %}">
-              Registrar padre/madre
-            </a>
-            <a class="btn btn-link btn-lg px-4" href="{% url 'accounts:login' %}">Login</a>
+            {% if not user.is_authenticated %}
+              <a class="btn btn-primary btn-lg px-4" href="{% url 'accounts:register_specialist' %}">
+                Registrar especialista
+              </a>
+              <a class="btn btn-outline-primary btn-lg px-4" href="{% url 'accounts:register_parent' %}">
+                Registrar padre/madre
+              </a>
+              <a class="btn btn-link btn-lg px-4" href="{% url 'accounts:login' %}">Login</a>
+            {% endif %}
+            <a class="btn btn-secondary btn-lg px-4" href="{% url 'blogs:blog-index' %}">Blogs</a>
             <a class="link-secondary align-self-center" href="#como-funciona">
               {{ c.hero.cta_secondary }}
             </a>
+            
           </div>
 
           <p class="text-muted mt-3 small">{{ c.hero.micro }}</p>
