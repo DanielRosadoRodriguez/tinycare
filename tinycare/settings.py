@@ -47,10 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Nuestra app de páginas estáticas (Landing, About, etc.)
-    'pages',
-    # Accounts (módulo de autenticación y registro de usuarios)
-    'accounts',
+    'rest_framework',  # [ADD] DRF
+    'pages', # Nuestra app de páginas estáticas (Landing, About, etc.)
+    'accounts', # Accounts (módulo de autenticación y registro de usuarios)
 ]
 
 MIDDLEWARE = [
