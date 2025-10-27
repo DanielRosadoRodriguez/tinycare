@@ -1,0 +1,6 @@
+<form method="post">{% csrf_token %}
+    
+<p>Seguro que quieres eliminar el siguiete blog: "{{ object.title }}"?</p>
+
+    <input type="submit" value="Confirm">
+</form>

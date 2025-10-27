@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'pages',
     # Accounts (módulo de autenticación y registro de usuarios)
     'accounts',
+    # Nuestra app de blog
+    'blog',
 ]
 
 MIDDLEWARE = [

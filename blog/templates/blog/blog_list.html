@@ -1,0 +1,7 @@
+<a href="{% url 'blogs:blog-create' %}">Create New Blog</a>
+
+{%for blog in blogs %}
+    <a href="{% url 'blogs:blog-detail' blog.pk %}"><p>{{ blog.title }}</p></a>
+{% empty %}
+    <p>No blogs available.</p>
+{% endfor %}

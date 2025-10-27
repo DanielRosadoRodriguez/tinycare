@@ -1,0 +1,6 @@
+{% csrf_token %}
+<h1>{{ blog.title }}</h1>
+<div>{{ blog.content | safe}}</div>
+
+<a href="{% url 'blogs:blog-update' blog.pk %}">Edit Blog</a>
+<a href="{% url 'blogs:blog-delete' blog.pk %}">Delete Blog</a>
