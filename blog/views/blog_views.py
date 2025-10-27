@@ -12,7 +12,7 @@ class BlogIndex(ListView):
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
         return qs.only('id', 'title', 'created_at').order_by('-created_at')
-    
+     
 class BlogDetailView(DetailView):
     model = Blog
     template_name = 'blog/blog_detail.html'
@@ -25,7 +25,6 @@ class BlogDetailView(DetailView):
         return context
     
     def post(self, request, *args, **kwargs):
-        # Obtenemos el blog actual
         self.object = self.get_object()
         form = CommentForm(request.POST)
         form.instance.author = request.user
@@ -35,7 +34,6 @@ class BlogDetailView(DetailView):
             comment.save()
             return redirect('blogs:blog-detail', pk=self.object.pk)
 
-        # Si el formulario tiene errores, los mostramos
         context = self.get_context_data(form=form)
         return self.render_to_response(context)
 

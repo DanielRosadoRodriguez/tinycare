@@ -1,7 +1,7 @@
 <h1>{{ blog.title }}</h1>
 <div>{{ blog.content | safe}}</div>
 
-<a href="{% url 'blogs:blog-update' blog.pk %}">Edit Blog</a>
+<a href="{% url 'blogs:blog-edit' blog.pk %}">Edit Blog</a>
 <a href="{% url 'blogs:blog-delete' blog.pk %}">Delete Blog</a>
 <h3>Comments</h3>
 {% for comment in comments %}
@@ -10,6 +10,8 @@
         <p>{{ comment.content }}</p>
         <p>At: {{ comment.created_at }}</p>
     </div>
+    <a href="{% url 'blogs:comment-edit' comment.pk %}">Edit Comment</a>
+    <a href="{% url 'blogs:comment-delete' comment.pk %}">Delete Comment</a>
 {% empty %}
     <p>Aún no existen comentarios</p>
 {% endfor %}
