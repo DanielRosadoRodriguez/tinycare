@@ -17,14 +17,21 @@
         <div class="col-12 col-md-8">
           <h1 class="display-5 fw-bold mb-3">{{ c.hero.h1 }}</h1>
           <p class="lead mb-4">{{ c.hero.sub }}</p>
+
+          <!-- CTAs actualizados -->
           <div class="d-flex flex-wrap gap-3">
-            <a class="btn btn-primary btn-lg px-4" href="{% url 'accounts:register' %}">
-              {{ c.hero.cta_primary }}
+            <a class="btn btn-primary btn-lg px-4" href="{% url 'accounts:register_specialist' %}">
+              Registrar especialista
             </a>
+            <a class="btn btn-outline-primary btn-lg px-4" href="{% url 'accounts:register_parent' %}">
+              Registrar padre/madre
+            </a>
+            <a class="btn btn-link btn-lg px-4" href="{% url 'accounts:login' %}">Login</a>
             <a class="link-secondary align-self-center" href="#como-funciona">
               {{ c.hero.cta_secondary }}
             </a>
           </div>
+
           <p class="text-muted mt-3 small">{{ c.hero.micro }}</p>
         </div>
       </div>
@@ -124,8 +131,13 @@
   <section class="py-5 bg-primary text-white text-center">
     <div class="container">
       <h2 class="h3 mb-3">{{ c.cta_bottom.title }}</h2>
-      <a class="btn btn-light btn-lg px-4 me-3" href="{% url 'accounts:register' %}">
-        {{ c.cta_bottom.button }}
+
+      <!-- CTAs finales actualizados -->
+      <a class="btn btn-light btn-lg px-4 me-2" href="{% url 'accounts:register_specialist' %}">
+        Registrar especialista
+      </a>
+      <a class="btn btn-outline-light btn-lg px-4 me-2" href="{% url 'accounts:register_parent' %}">
+        Registrar padre/madre
       </a>
       <a class="link-light d-inline-block mt-3 mt-md-0" href="/admin/login/">
         {{ c.cta_bottom.link_login }}
