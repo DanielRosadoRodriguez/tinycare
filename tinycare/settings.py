@@ -145,3 +145,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'  # [ADD] listo para collectstatic en desp
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Session settings
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # [ADD] cerrar sesión al cerrar navegador
