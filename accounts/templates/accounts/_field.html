@@ -1,0 +1,26 @@
+{# Parcial para un campo simple de formulario #}
+<div class="mb-3">
+  <label class="form-label" for="{{ field.id_for_label }}">{{ label }}</label>
+
+  {# Render manual del input para poder poner attrs sin dicts #}
+  <input
+    {% if type %}type="{{ type }}"{% else %}type="text"{% endif %}
+    name="{{ field.html_name }}"
+    id="{{ field.id_for_label }}"
+    {% if type != "password" %}
+      value="{{ field.value|default_if_none:'' }}"
+    {% endif %}
+    class="form-control{% if field.errors %} is-invalid{% endif %}"
+    placeholder="{{ placeholder|default:'' }}"
+    {% if autocomplete %}autocomplete="{{ autocomplete }}"{% endif %}
+    {% if field.field.required %}required{% endif %}
+    {% if field.field.max_length %}maxlength="{{ field.field.max_length }}"{% endif %}
+    {% if field.field.min_length %}minlength="{{ field.field.min_length }}"{% endif %}
+  />
+
+  {% if field.errors %}
+    <div class="invalid-feedback d-block">
+      {{ field.errors|striptags }}
+    </div>
+  {% endif %}
+</div>
