@@ -2,6 +2,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from ..models.blog_model import Blog
 from ..forms.comment_form import CommentForm
+from ..permissions.owner_permission_mixin import OwnerPermissionMixin
 
 class BlogIndex(ListView):
     model = Blog
@@ -47,13 +48,15 @@ class BlogCreateView(CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
     
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(OwnerPermissionMixin, UpdateView):
+    permission_required = 'blog.change_blog'
     model = Blog
     template_name = 'blog/blog_form.html'
     fields = ['title', 'content']
     success_url = '/blogs/'
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(OwnerPermissionMixin, DeleteView):
+    permission_required = 'blog.delete_blog'
     model = Blog
     template_name = 'blog/blog_confirm_delete.html'
     success_url = '/blogs/'
