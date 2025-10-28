@@ -3,7 +3,9 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from ..models.blog_model import Blog
 from ..forms.comment_form import CommentForm
 from ..permissions.owner_permission_mixin import OwnerPermissionMixin
-
+from ..permissions.specialit_comment_permission import is_specialit
+from django.contrib.auth.decorators import user_passes_test
+from django.utils.decorators import method_decorator
 class BlogIndex(ListView):
     model = Blog
     template_name = 'blog/blog_index.html'
@@ -12,7 +14,7 @@ class BlogIndex(ListView):
     
     def get_queryset(self, *args, **kwargs):
         qs = super().get_queryset(*args, **kwargs)
-        return qs.only('id', 'title', 'created_at').order_by('-created_at')
+        return qs.only('id', 'title', 'created_at', 'author').order_by('-created_at')
      
 class BlogDetailView(DetailView):
     model = Blog
@@ -22,9 +24,11 @@ class BlogDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['comments'] = self.object.comments.order_by('-created_at')
-        context['form'] = kwargs.get('form', CommentForm())
+        if is_specialit(self.request.user):
+            context['form'] = kwargs.get('form', CommentForm())
         return context
     
+    @method_decorator(user_passes_test(is_specialit))
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = CommentForm(request.POST)
