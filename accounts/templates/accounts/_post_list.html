@@ -1,0 +1,28 @@
+{% comment %} Partial: list of posts (expects 'blogs' as a Page object) {% endcomment %}
+{% for blog in blogs %}
+  <div class="col-12">
+    <article class="feed-card">
+      <div class="d-flex align-items-start gap-3">
+        <div class="flex-grow-1">
+          <h2 class="h5 feed-title mb-1">
+            <a class="text-decoration-none stretched-link" href="{% url 'blogs:blog-detail' blog.pk %}">{{ blog.title }}</a>
+          </h2>
+          <div class="blog-meta">Publicado: <time title="{{ blog.created_at }}">{{ blog.created_at }}</time></div>
+          <p class="mt-2 mb-0 text-muted">{{ blog.excerpt|default:blog.content|truncatechars:160 }}</p>
+        </div>
+        <div class="text-end">
+          <a href="{% url 'blogs:blog-detail' blog.pk %}" class="btn btn-sm btn-outline-primary">Abrir</a>
+        </div>
+      </div>
+    </article>
+  </div>
+{% endfor %}
+
+{% if blogs.paginator.count == 0 %}
+  <div class="col-12">
+    <div class="text-center py-5">
+      <p class="mb-3 fs-5">No hay publicaciones todavía.</p>
+      <a class="btn btn-primary" href="{% url 'blogs:blog-create' %}">Crear la primera</a>
+    </div>
+  </div>
+{% endif %}
