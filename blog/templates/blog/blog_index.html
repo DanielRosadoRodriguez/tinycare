@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Blogs • TinyCare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --tc-bg: #f8fafc;
+      --tc-card-bg: #ffffff;
+      --tc-text: #0f172a;
+      --tc-muted: #64748b;
+      --tc-primary: #4f46e5; /* Indigo */
+      --tc-primary-dark: #3730a3;
+    }
+    body{ background: var(--tc-bg); color: var(--tc-text); }
+
+    /* HERO */
+    .hero{
+      position: relative;
+      border-radius: 1.25rem;
+      padding: clamp(1.5rem, 3vw, 2.5rem);
+      background:
+        linear-gradient(rgba(0,0,0,.25), rgba(0,0,0,.25)),
+        linear-gradient(135deg,#0ea5e9 0%,#6366f1 60%,#7c3aed 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+    .hero h1{ font-weight: 800; letter-spacing:.2px; }
+    .hero p{ opacity:.95; max-width: 60ch; }
+
+    /* CTA contrastado usando variables de Bootstrap para evitar override en :hover */
+    .btn-hero{
+      /* Mapeo de variables de .btn para todos los estados */
+      --bs-btn-color: #0f172a;             /* color de texto */
+      --bs-btn-bg: #ffffff;                /* fondo normal */
+      --bs-btn-border-color: #ffffff;
+
+      --bs-btn-hover-color: #0f172a;       /* texto en hover */
+      --bs-btn-hover-bg: #f1f5f9;          /* fondo en hover */
+      --bs-btn-hover-border-color: #f1f5f9;
+
+      --bs-btn-active-color: #0f172a;      /* texto activo */
+      --bs-btn-active-bg: #e2e8f0;         /* fondo activo */
+      --bs-btn-active-border-color: #e2e8f0;
+
+      --bs-btn-disabled-color: #0f172a;
+      --bs-btn-disabled-bg: #ffffff;
+      --bs-btn-disabled-border-color: #ffffff;
+
+      --bs-btn-focus-shadow-rgb: 255,255,255;
+
+      border-width: 0;
+      border-radius: .75rem;
+      box-shadow: 0 8px 20px rgba(2,6,23,.18);
+      font-weight: 600;
+      transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+    }
+    .btn-hero:hover{ transform: translateY(-1px); }
+    .btn-hero:focus-visible{
+      outline: 3px solid #ffffff;  /* foco muy visible sobre el gradiente */
+      outline-offset: 2px;
+    }
+
+    /* Tarjetas de blog */
+    .blog-card{
+      background: var(--tc-card-bg);
+      border: 0;
+      border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(2,6,23,.06);
+      transition: transform .18s ease, box-shadow .18s ease;
+      height: 100%;
+    }
+    .blog-card:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(2,6,23,.1); }
+    .blog-card:focus-within{ outline: 3px solid rgba(79,70,229,.35); outline-offset: 2px; }
+
+    .blog-title{
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: .25rem;
+      word-break: break-word;
+    }
+    .blog-meta{
+      color: var(--tc-muted);
+      font-size: .95rem;
+    }
+    .stretched-link{ position: relative; z-index: 1; }
+
+    /* Tipografía base legible */
+    .content-max{ max-width: 68ch; } /* ~60–75 caracteres por línea */
+
+    /* Respeta preferencias de movimiento */
+    @media (prefers-reduced-motion: reduce){
+      .btn-hero, .blog-card{ transition: none !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container py-4 py-md-5">
+    <!-- HERO -->
+    <section class="hero mb-4 mb-md-5">
+      <div class="row align-items-center">
+        <div class="col-12 col-lg-8">
+          <h1 class="display-6 mb-2">Blog</h1>
+          <p class="mb-0 content-max">Historias, avances y notas del proyecto.</p>
+        </div>
+        <div class="col-12 col-lg-4 mt-3 mt-lg-0 text-lg-end">
+          <a class="btn btn-hero btn-lg" href="{% url 'blogs:blog-create' %}">
+            Crear nuevo blog
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- LISTA DE BLOGS -->
+    <section aria-label="Listado de blogs">
+      <div class="row g-4">
+        {% for blog in blogs %}
+          <div class="col-12 col-md-6 col-lg-4">
+            <article class="card blog-card h-100 p-3 p-md-4">
+              <h2 class="h5 blog-title mb-1">
+                <a class="stretched-link text-decoration-none" href="{% url 'blogs:blog-detail' blog.pk %}" aria-label="Abrir: {{ blog.title }}">
+                  {{ blog.title }}
+                </a>
+              </h2>
+              <div class="blog-meta">
+                <span>Creado: </span>
+                <time title="{{ blog.created_at }}">{{ blog.created_at }}</time>
+              </div>
+            </article>
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <div class="text-center py-5">
+              <p class="mb-3 fs-5">No hay blogs disponibles.</p>
+              <a class="btn btn-outline-primary" href="{% url 'blogs:blog-create' %}">Crear el primero</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
