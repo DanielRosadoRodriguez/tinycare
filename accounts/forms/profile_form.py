@@ -37,3 +37,16 @@ class ProfileForm(forms.ModelForm):
         if qs.exists():
             raise forms.ValidationError("Este correo ya está en uso por otro usuario.")
         return email
+
+    def save(self, commit=True):
+        """
+        Sobrescribe save para sincronizar username con email.
+        En este proyecto, username siempre debe ser igual al email.
+        """
+        user = super().save(commit=False)
+        # Sincronizar username con email
+        if self.cleaned_data.get("email"):
+            user.username = self.cleaned_data["email"]
+        if commit:
+            user.save()
+        return user

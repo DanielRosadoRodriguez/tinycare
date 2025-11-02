@@ -52,10 +52,7 @@ def profile_view(request):
                     if "username" in user_form.errors:
                         user_form.errors.pop("username", None)
         if forms_valid:
-            # sincronizar username con email si el correo fue cambiado
-            new_email = user_form.cleaned_data.get("email")
-            if new_email and new_email != user.email:
-                user_form.instance.username = new_email
+            # El ProfileForm ya sincroniza username con email en su método save()
             user_form.save()
             if profile_form:
                 profile_obj = profile_form.save(commit=False)
