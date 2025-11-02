@@ -2,8 +2,8 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from ..models.blog_model import Blog
 from ..forms.comment_form import CommentForm
-from ..permissions.owner_permission_mixin import OwnerPermissionMixin
-from ..permissions.specialit_comment_permission import is_specialit
+from accounts.permissions.specialit_comment_permission import is_specialit
+from accounts.permissions.owner_permission_mixin import OwnerPermissionMixin
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 class BlogIndex(ListView):

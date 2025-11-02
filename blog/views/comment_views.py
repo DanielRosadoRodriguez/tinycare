@@ -1,7 +1,7 @@
 from django.urls import reverse
 from ..models.comment_model import Comment
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
-from ..permissions.owner_permission_mixin import OwnerPermissionMixin
+from django.views.generic import UpdateView, DeleteView
+from accounts.permissions.owner_permission_mixin import OwnerPermissionMixin
 
 class CommentUpdateView(OwnerPermissionMixin, UpdateView):
     permission_required = 'blog.change_comment'

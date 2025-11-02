@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'rest_framework',  # [ADD] DRF
     'pages', # Nuestra app de páginas estáticas (Landing, About, etc.)
     'accounts', # Accounts (módulo de autenticación y registro de usuarios)
-    'blog'
+    'blog',
+    'vaccines',
 ]
 
 MIDDLEWARE = [

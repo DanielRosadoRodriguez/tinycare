@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Calendario de Vacunas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --tc-bg:#f8fafc; --tc-text:#0f172a; --tc-muted:#64748b;
+      --tc-card:#ffffff; --tc-ring:79,70,229;
+    }
+    body{ background:var(--tc-bg); color:var(--tc-text); }
+    .page-header{
+      border-radius:1rem;
+      background:linear-gradient(rgba(0,0,0,.18),rgba(0,0,0,.18)),
+        linear-gradient(135deg,#0ea5e9 0%,#6366f1 60%,#7c3aed 100%);
+      color:#fff; padding:clamp(1rem,3vw,1.75rem); margin-bottom:1.5rem;
+    }
+    .calendar-container{
+      display:grid; grid-template-columns:260px 1fr; gap:1.5rem;
+    }
+    .vaccine-list{
+      background:var(--tc-card); border-radius:1rem;
+      box-shadow:0 10px 26px rgba(2,6,23,.07);
+      padding:1rem; height:70vh; overflow-y:auto;
+    }
+    .vaccine-item{ padding:.5rem .75rem; border-radius:.5rem; transition:.2s; cursor:pointer; }
+    .vaccine-item:hover{ background:#eef2ff; }
+    .calendar-card{
+      background:var(--tc-card); border-radius:1rem;
+      box-shadow:0 10px 26px rgba(2,6,23,.07);
+      padding:1rem;
+    }
+    .calendar-header{ display:flex; align-items:center; justify-content:center; gap:.75rem; margin-bottom:1rem; }
+    .calendar-header button{
+      border:0; background:#e0e7ff; border-radius:.5rem;
+      padding:.35rem .6rem; cursor:pointer;
+    }
+    .calendar-header h2{ margin:0; font-weight:700; cursor:pointer; }
+    .calendar-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:.5rem; }
+    .calendar-day{
+      border:1px solid #e5e7eb; border-radius:.6rem;
+      padding:.6rem; min-height:80px; position:relative;
+      cursor:pointer; transition:.2s;
+    }
+    .calendar-day:hover{
+      border-color:rgba(var(--tc-ring),.6);
+      box-shadow:0 0 0 .15rem rgba(var(--tc-ring),.15);
+    }
+    .calendar-day.highlight{
+      border-color:#4f46e5;
+      box-shadow:0 0 0 .25rem rgba(79,70,229,.4);
+      transition:.3s;
+    }
+    .day-number{ font-weight:600; margin-bottom:.3rem; }
+    .vaccine-name{
+      display:block; font-size:.85rem;
+      background:#eef2ff; border-radius:.35rem;
+      padding:.15rem .35rem; margin-bottom:.25rem;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    }
+  </style>
+</head>
+<body>
+  <main class="container py-4 py-md-5">
+    <header class="page-header">
+      <div class="d-flex flex-column flex-md-row align-items-md-center gap-2 justify-content-between">
+        <div>
+          <h1 class="h3">Calendario de Vacunas</h1>
+          <p class="small">Consulta tus vacunas mes a mes.</p>
+        </div>
+        <div>
+          <a href="{% url 'vaccines:vaccine-create' %}" class="btn btn-outline-light">Registrar nueva</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="calendar-container">
+      <!-- Lista lateral con paginación -->
+      <div class="vaccine-list">
+        <h5 class="mb-3">Vacunas registradas</h5>
+        {% for vaccine in vaccines %}
+          <div class="vaccine-item" data-date="{{ vaccine.applied_at }}">
+            <strong>{{ vaccine.name }}</strong><br>
+            <small class="text-muted">{{ vaccine.applied_at|date:"d/m/Y" }}</small>
+          </div>
+        {% empty %}
+          <p class="text-muted">No hay vacunas registradas.</p>
+        {% endfor %}
+
+        <!-- Controles de paginación -->
+        {% if is_paginated %}
+          <nav aria-label="Page navigation" class="mt-3">
+            <ul class="pagination justify-content-center">
+              {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+              {% endif %}
+              <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+              {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+              {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+      </div>
+
+      <!-- Calendario -->
+      <div class="calendar-card">
+        <div class="calendar-header">
+          <button id="prevMonth">&larr;</button>
+          <h2 id="monthYear"></h2>
+          <button id="nextMonth">&rarr;</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div class="modal fade" id="dayModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="dayModalLabel">Vacunas del día</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <ul id="vaccineList"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const vaccines = [
+      {% for v in all_vaccines %}
+        {name:"{{ v.name }}", date:"{{ v.applied_at|date:'Y-m-d' }}"},
+      {% endfor %}
+    ];
+
+    const grid = document.getElementById("calendarGrid");
+    const monthYear = document.getElementById("monthYear");
+    const modal = new bootstrap.Modal(document.getElementById("dayModal"));
+    const vaccineList = document.getElementById("vaccineList");
+    let current = new Date();
+
+    function renderCalendar(){
+      grid.innerHTML="";
+      const year=current.getFullYear();
+      const month=current.getMonth();
+      const firstDay=new Date(year,month,1);
+      const lastDay=new Date(year,month+1,0);
+      const monthName=current.toLocaleString("es-ES",{month:"long"});
+      monthYear.textContent=`${monthName.charAt(0).toUpperCase()+monthName.slice(1)} ${year}`;
+
+      for(let i=0;i<firstDay.getDay();i++){
+        grid.appendChild(document.createElement("div"));
+      }
+
+      for(let d=1;d<=lastDay.getDate();d++){
+        const dateStr=`${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+        const dayBox=document.createElement("div");
+        dayBox.className="calendar-day";
+        dayBox.innerHTML=`<div class="day-number">${d}</div>`;
+        const dayVaccines=vaccines.filter(v=>v.date===dateStr);
+        dayVaccines.forEach(v=>{
+          const span=document.createElement("span");
+          span.className="vaccine-name";
+          span.textContent=v.name;
+          dayBox.appendChild(span);
+        });
+        dayBox.onclick=()=>{
+          vaccineList.innerHTML="";
+          if(dayVaccines.length>0){
+            dayVaccines.forEach(v=>{
+              const li=document.createElement("li");
+              li.textContent=v.name;
+              vaccineList.appendChild(li);
+            });
+          }else{
+            vaccineList.innerHTML="<li class='text-muted'>Sin vacunas</li>";
+          }
+          document.getElementById("dayModalLabel").textContent=`Vacunas del ${d} de ${monthName}`;
+          modal.show();
+        };
+        grid.appendChild(dayBox);
+      }
+    }
+
+    document.getElementById("prevMonth").onclick=()=>{current.setMonth(current.getMonth()-1);renderCalendar();}
+    document.getElementById("nextMonth").onclick=()=>{current.setMonth(current.getMonth()+1);renderCalendar();}
+
+    monthYear.onclick=()=>{
+      const input=prompt("Introduce mes y año (MM/YYYY):",`${String(current.getMonth()+1).padStart(2,"0")}/${current.getFullYear()}`);
+      if(!input)return;
+      const [m,y]=input.split("/");
+      if(m&&y){current.setFullYear(parseInt(y));current.setMonth(parseInt(m)-1);renderCalendar();}
+    };
+
+    // Click lista lateral (resalta día)
+    document.querySelectorAll(".vaccine-item").forEach(el=>{
+      el.addEventListener("click",()=>{
+        const date=new Date(el.dataset.date);
+        current=new Date(date.getFullYear(),date.getMonth(),1);
+        renderCalendar();
+        setTimeout(()=>{
+          const highlightDay=[...document.querySelectorAll(".calendar-day")]
+            .find(d=>d.querySelector(".day-number").textContent==date.getDate());
+          if(highlightDay){
+            highlightDay.classList.add("highlight");
+            setTimeout(()=>highlightDay.classList.remove("highlight"),3000);
+          }
+        },200);
+      });
+    });
+
+    renderCalendar();
+  </script>
+</body>
+</html>
