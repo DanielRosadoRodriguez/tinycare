@@ -90,7 +90,8 @@
     <div class="offcanvas-body">
       <div class="mb-3">
         <strong>{{ display_name }}</strong>
-        <div class="text-muted small">@{{ request.user.username }}</div>
+        <!-- Mostrar el correo del usuario sin prefijo '@' duplicado -->
+        <div class="text-muted small">{{ request.user.email }}</div>
       </div>
 
       <!-- Logout as POST form (CSRF) -->
