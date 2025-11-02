@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('pages.urls')), 
     path('accounts/', include('accounts.urls')),
     path('blogs/', include('blog.urls')),
+    path('bebes/', include('babies.urls')),  # [ADD] Gestión de bebés
 ]
