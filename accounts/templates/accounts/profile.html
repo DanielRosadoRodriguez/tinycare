@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Perfil • TinyCare</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body{ background:#f8fafc; color:#0f172a; }
+    .profile-card{ max-width:720px; margin:3rem auto; }
+  </style>
+</head>
+<body>
+  <main class="container profile-card">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex align-items-start justify-content-between mb-3">
+          <div>
+            <h1 class="h4 mb-1">Perfil de
+              {% if profile %}
+                {{ profile.nombres }} {{ profile.apellido_paterno }}
+              {% elif user.first_name or user.last_name %}
+                {{ user.first_name }} {{ user.last_name }}
+              {% else %}
+                {{ user.username }}
+              {% endif %}
+            </h1>
+            <div class="text-muted small">{{ user.email }}</div>
+          </div>
+          <div class="text-end">
+            <span class="badge bg-primary text-white fs-6 fw-bold py-2 px-3">{{ account_type }}</span>
+          </div>
+        </div>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+        <form method="post" novalidate class="row g-3">
+          {% csrf_token %}
+
+          {# Mostrar todos los campos juntos (perfil + cuenta) con apariencia uniforme #}
+          {% if profile_form %}
+            <div class="col-12">
+              <label class="form-label fw-semibold">Nombres</label>
+              {{ profile_form.nombres }}
+              {% for e in profile_form.nombres.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Apellido paterno</label>
+              {{ profile_form.apellido_paterno }}
+              {% for e in profile_form.apellido_paterno.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Apellido materno</label>
+              {{ profile_form.apellido_materno }}
+              {% for e in profile_form.apellido_materno.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+            </div>
+            {% if profile_form.cedula_profesional %}
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">Cédula profesional</label>
+                {{ profile_form.cedula_profesional }}
+                {% for e in profile_form.cedula_profesional.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+              </div>
+            {% endif %}
+          {% endif %}
+          {# Mostrar los campos de nombre y apellido sólo si el usuario ya tiene valor para ellos #}
+          {% if user.first_name %}
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Nombre</label>
+              {{ user_form.first_name }}
+              {% for e in user_form.first_name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+            </div>
+          {% endif %}
+
+          {% if user.last_name %}
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Apellido</label>
+              {{ user_form.last_name }}
+              {% for e in user_form.last_name.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+            </div>
+          {% endif %}
+
+          {# Aun cuando los campos de nombre/apellido se oculten, enviar el username para que el ModelForm tenga la instancia completa #}
+          {{ user_form.username.as_hidden }}
+
+          <div class="col-12">
+            <label class="form-label fw-semibold">Correo electrónico</label>
+            {{ user_form.email }}
+            {% for e in user_form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
+          </div>
+
+          <div class="col-12 d-flex gap-2 mt-2">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a href="{% url 'accounts:greet' %}" class="btn btn-outline-secondary">Volver</a>
+          </div>
+        </form>
+
+        <hr class="my-4" />
+
+        <h6 class="mb-2">Datos del sistema</h6>
+        <p class="mb-1 text-muted">Cuenta activa: <strong>{{ user.is_active|yesno:"Sí,No" }}</strong></p>
+        <p class="mb-0 text-muted">Creado: <strong>{{ user.date_joined }}</strong></p>
+      </div>
+    </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

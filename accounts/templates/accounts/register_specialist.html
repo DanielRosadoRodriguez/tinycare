@@ -33,7 +33,7 @@
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary btn-lg">Crear cuenta</button>
                 <a class="btn btn-outline-secondary" href="{% url 'accounts:register_parent' %}">¿Eres padre/madre? Regístrate aquí</a>
-                <a class="btn btn-link" href="/admin/login/">¿Ya tienes cuenta? Inicia sesión</a>
+                <a class="btn btn-link" href="{% url 'accounts:login' %}">¿Ya tienes cuenta? Inicia sesión</a>
               </div>
             </form>
           </div>

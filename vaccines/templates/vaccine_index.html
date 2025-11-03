@@ -71,23 +71,29 @@
           <p class="small">Consulta tus vacunas mes a mes.</p>
         </div>
         <div>
-          <a href="{% url 'vaccines:vaccine-create' %}" class="btn btn-outline-light">Registrar nueva</a>
+          <a href="{% url 'accounts:greet' %}" class="btn btn-outline-light">Volver</a>
+          <a href="{% url 'vaccines:vaccines-create' %}" class="btn btn-outline-light">Registrar nueva</a>
         </div>
       </div>
     </header>
 
     <div class="calendar-container">
-      <!-- Lista lateral con paginación -->
-      <div class="vaccine-list">
-        <h5 class="mb-3">Vacunas registradas</h5>
-        {% for vaccine in vaccines %}
-          <div class="vaccine-item" data-date="{{ vaccine.applied_at }}">
-            <strong>{{ vaccine.name }}</strong><br>
-            <small class="text-muted">{{ vaccine.applied_at|date:"d/m/Y" }}</small>
-          </div>
-        {% empty %}
-          <p class="text-muted">No hay vacunas registradas.</p>
-        {% endfor %}
+<!-- Lista lateral con paginación -->
+        <div class="vaccine-list">
+          <h5 class="mb-3">Vacunas registradas</h5>
+          {% for vaccine in vaccines %}
+            <a href="{% url 'vaccines:vaccines-detail' vaccine.pk %}" class="text-decoration-none">
+              <div class="vaccine-item card mb-2 p-3" data-date="{{ vaccine.applied_at }}">
+                <strong class="text-dark">{{ vaccine.name }}</strong><br>
+                <small class="text-muted">{{ vaccine.applied_at|date:"d/m/Y" }}</small>
+                <span class="badge {% if vaccine.status == 'AP' %}bg-success{% else %}bg-warning{% endif %} float-end">
+                  {{ vaccine.get_status_display }}
+                </span>
+              </div>
+            </a>
+          {% empty %}
+            <p class="text-muted">No hay vacunas registradas.</p>
+          {% endfor %}
 
         <!-- Controles de paginación -->
         {% if is_paginated %}
@@ -135,7 +141,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const vaccines = [
-      {% for v in all_vaccines %}
+      {% for v in vaccines %}
         {name:"{{ v.name }}", date:"{{ v.applied_at|date:'Y-m-d' }}"},
       {% endfor %}
     ];
@@ -200,22 +206,6 @@
     };
 
     // Click lista lateral (resalta día)
-    document.querySelectorAll(".vaccine-item").forEach(el=>{
-      el.addEventListener("click",()=>{
-        const date=new Date(el.dataset.date);
-        current=new Date(date.getFullYear(),date.getMonth(),1);
-        renderCalendar();
-        setTimeout(()=>{
-          const highlightDay=[...document.querySelectorAll(".calendar-day")]
-            .find(d=>d.querySelector(".day-number").textContent==date.getDate());
-          if(highlightDay){
-            highlightDay.classList.add("highlight");
-            setTimeout(()=>highlightDay.classList.remove("highlight"),3000);
-          }
-        },200);
-      });
-    });
-
     renderCalendar();
   </script>
 </body>

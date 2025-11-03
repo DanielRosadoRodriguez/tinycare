@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'accounts', # Accounts (módulo de autenticación y registro de usuarios)
     'blog',
     'vaccines',
+    'babies',  # [ADD] Gestión de bebés (CRUD)
 ]
 
 MIDDLEWARE = [
