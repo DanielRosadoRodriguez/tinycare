@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'blog',
     'vaccines',
     'babies',  # [ADD] Gestión de bebés (CRUD)
+    'notifications.apps.NotificationsConfig'
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notifications.context_processors.unread_notification_count'
             ],
         },
     },
