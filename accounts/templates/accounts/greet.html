@@ -102,8 +102,18 @@
 
       <!-- Links / quick actions -->
   <hr />
+  <a class="btn btn-outline-secondary w-100 mb-2 position-relative" href="{% url 'notifications:notification-list' %}">
+        Notificaciones
+        
+        {% if unread_notification_count > 0 %}
+          <span class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" style="font-size: 0.7rem; margin-left: -10px;">
+            {{ unread_notification_count }}
+          </span>
+        {% endif %}
+</a>
   <a class="btn btn-outline-secondary w-100 mb-2" href="{% url 'accounts:profile' %}">Ver perfil</a>
   <a class="btn btn-outline-primary w-100 mb-2" href="{% url 'babies:baby_list' %}">Mis Bebés</a>
+  <a class="btn btn-outline-primary w-100 mb-2" href="{% url 'vaccines:vaccines-index' %}">Vacunas</a>
     </div>
   </div>
 
