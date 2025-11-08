@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'blog',
     'vaccines',
     'babies',  # [ADD] Gestión de bebés (CRUD)
+    'privacy',  # [ADD] Gestión de avisos de privacidad
     'notifications.apps.NotificationsConfig'
 ]
 
@@ -152,3 +153,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Session settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # [ADD] cerrar sesión al cerrar navegador
+
+# [ADD] Encryption settings - AES-256-GCM para datos sensibles en reposo
+# La clave debe ser de 32 bytes (256 bits) codificada en base64
+# Generar con: python -c "import os, base64; print(base64.b64encode(os.urandom(32)).decode())"
+ENCRYPTION_KEY = os.getenv("ENCRYPTION_KEY", None)
+if not ENCRYPTION_KEY and not DEBUG:
+    raise ValueError("ENCRYPTION_KEY debe estar configurada en producción")

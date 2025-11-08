@@ -1,0 +1,85 @@
+/**
+ * Estilos para drag-and-drop de avisos de privacidad
+ */
+
+.privacy-notice-dropzone {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    background: #fafafa;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
+
+.privacy-notice-dropzone:hover {
+    border-color: #417690;
+    background: #f0f8ff;
+}
+
+.privacy-notice-dropzone.dragover {
+    border-color: #417690;
+    background: #e6f4ff;
+    border-style: solid;
+}
+
+.privacy-notice-dropzone.has-file {
+    border-color: #28a745;
+    background: #f0fff4;
+}
+
+.dropzone-content {
+    pointer-events: none;
+}
+
+.dropzone-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+}
+
+.dropzone-text {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.dropzone-hint {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+}
+
+.dropzone-file-info {
+    padding: 20px;
+}
+
+.dropzone-file-info .file-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.dropzone-clear {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.dropzone-clear:hover {
+    background: #c82333;
+}
+
+/* Ocultar el input file original */
+input[type="file"][name="file"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}

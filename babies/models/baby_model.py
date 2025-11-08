@@ -4,10 +4,13 @@ Modelo Baby - Registro de información de bebés.
 Un bebé pertenece a un único ProfileParent (1:N).
 Incluye campos obligatorios (nombre, fecha_nacimiento, sexo) y opcionales
 (peso, alergias, condiciones_salud) según requisitos del proyecto.
+
+Los campos sensibles (alergias, condiciones_salud) se cifran con AES-256-GCM.
 """
 
 from django.db import models
 from accounts.models.profile_parent import ProfileParent
+from core.fields import EncryptedTextField
 
 
 class Baby(models.Model):
@@ -44,15 +47,17 @@ class Baby(models.Model):
         verbose_name="Peso (kg)",
         help_text="Peso del bebé en kilogramos",
     )
-    alergias = models.TextField(
+    
+    # Campos sensibles - cifrados con AES-256-GCM
+    alergias = EncryptedTextField(
         blank=True,
         verbose_name="Alergias",
-        help_text="Registra alergias conocidas del bebé",
+        help_text="Registra alergias conocidas del bebé (cifrado)",
     )
-    condiciones_salud = models.TextField(
+    condiciones_salud = EncryptedTextField(
         blank=True,
         verbose_name="Condiciones de salud",
-        help_text="Condiciones médicas, enfermedades crónicas, etc.",
+        help_text="Condiciones médicas, enfermedades crónicas, etc. (cifrado)",
     )
 
     # Metadatos
