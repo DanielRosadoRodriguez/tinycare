@@ -24,5 +24,6 @@ urlpatterns = [
     path('blogs/', include('blog.urls')),
     path('vaccines/', include('vaccines.urls')),
     path('bebes/', include('babies.urls')),  # [ADD] Gestión de bebés
+    path('privacy/', include('privacy.urls')),  # [ADD] Avisos de privacidad
     path('notifications/', include('notifications.urls')),  # [ADD] Notificaciones
 ]

@@ -91,17 +91,79 @@
             {% for e in user_form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
           </div>
 
-          <div class="col-12 d-flex gap-2 mt-2">
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            <a href="{% url 'accounts:greet' %}" class="btn btn-outline-secondary">Volver</a>
+          <hr class="my-4" />
+
+          <h6 class="mb-3">Privacidad y Seguridad</h6>
+          <p class="text-muted small mb-3">Gestiona tus preferencias de uso de datos. Las finalidades operativas son necesarias para el funcionamiento del servicio.</p>
+          
+          <div class="alert alert-info d-flex align-items-center justify-content-between mb-3">
+            <div>
+              <strong>Descarga tus datos personales</strong>
+              <div class="text-muted small mt-1">Obtén una copia completa de todos tus datos almacenados en formato JSON y CSV con verificación SHA-256.</div>
+            </div>
+            <a href="{% url 'privacy:download_data' %}" class="btn btn-sm btn-outline-primary ms-3 text-nowrap">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+              </svg>
+              Descargar ZIP
+            </a>
           </div>
-        </form>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" checked disabled id="operacion">
+            <label class="form-check-label" for="operacion">
+              <strong>Operativas</strong> <span class="badge bg-success text-white">Requeridas</span>
+              <div class="text-muted small">Finalidades necesarias para el funcionamiento del servicio</div>
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="analitica" id="analitica" {% if consentimiento.analitica %}checked{% endif %}>
+            <label class="form-check-label" for="analitica">
+              <strong>Analíticas</strong>
+              <div class="text-muted small">Análisis de uso y estadísticas del servicio</div>
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="marketing" id="marketing" {% if consentimiento.marketing %}checked{% endif %}>
+            <label class="form-check-label" for="marketing">
+              <strong>Marketing</strong>
+              <div class="text-muted small">Envío de notificaciones promocionales y comunicaciones comerciales</div>
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="personalizacion" id="personalizacion" {% if consentimiento.personalizacion %}checked{% endif %}>
+            <label class="form-check-label" for="personalizacion">
+              <strong>Personalización</strong>
+              <div class="text-muted small">Personalización de contenido y experiencia de usuario</div>
+            </label>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="investigacion" id="investigacion" {% if consentimiento.investigacion %}checked{% endif %}>
+            <label class="form-check-label" for="investigacion">
+              <strong>Investigación</strong>
+              <div class="text-muted small">Uso de datos para investigación y desarrollo (anonimizados)</div>
+            </label>
+          </div>
+          
+          <div class="text-muted small mb-3">Última actualización: {{ consentimiento.actualizado_en|date:"d/m/Y H:i" }}</div>
 
         <hr class="my-4" />
 
         <h6 class="mb-2">Datos del sistema</h6>
         <p class="mb-1 text-muted">Cuenta activa: <strong>{{ user.is_active|yesno:"Sí,No" }}</strong></p>
-        <p class="mb-0 text-muted">Creado: <strong>{{ user.date_joined }}</strong></p>
+        <p class="mb-4 text-muted">Creado: <strong>{{ user.date_joined }}</strong></p>
+
+        {# Botones de acción para toda la página #}
+        <div class="d-flex gap-2 justify-content-end">
+          <a href="{% url 'accounts:greet' %}" class="btn btn-outline-secondary">Volver</a>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+        </form>
       </div>
     </div>
   </main>

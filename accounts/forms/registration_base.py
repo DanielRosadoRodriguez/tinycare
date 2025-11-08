@@ -9,6 +9,14 @@ class RegistrationBaseForm(forms.Form):
     email = forms.EmailField(label="Correo electrónico", max_length=254)
     password = forms.CharField(label="Contraseña", widget=forms.PasswordInput, min_length=8)
     password_confirm = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput, min_length=8)
+    
+    accept_privacy = forms.BooleanField(
+        label="Acepto el aviso de privacidad",
+        required=True,
+        error_messages={
+            "required": "Debes aceptar el aviso de privacidad para continuar."
+        }
+    )
 
     def clean(self):
         cleaned = super().clean()
