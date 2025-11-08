@@ -91,17 +91,65 @@
             {% for e in user_form.email.errors %}<div class="text-danger small">{{ e }}</div>{% endfor %}
           </div>
 
-          <div class="col-12 d-flex gap-2 mt-2">
-            <button type="submit" class="btn btn-primary">Guardar cambios</button>
-            <a href="{% url 'accounts:greet' %}" class="btn btn-outline-secondary">Volver</a>
+          <hr class="my-4" />
+
+          <h6 class="mb-3">Privacidad y Seguridad</h6>
+          <p class="text-muted small mb-3">Gestiona tus preferencias de uso de datos. Las finalidades operativas son necesarias para el funcionamiento del servicio.</p>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" checked disabled id="operacion">
+            <label class="form-check-label" for="operacion">
+              <strong>Operativas</strong> <span class="badge bg-success text-white">Requeridas</span>
+              <div class="text-muted small">Finalidades necesarias para el funcionamiento del servicio</div>
+            </label>
           </div>
-        </form>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="analitica" id="analitica" {% if consentimiento.analitica %}checked{% endif %}>
+            <label class="form-check-label" for="analitica">
+              <strong>Analíticas</strong>
+              <div class="text-muted small">Análisis de uso y estadísticas del servicio</div>
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="marketing" id="marketing" {% if consentimiento.marketing %}checked{% endif %}>
+            <label class="form-check-label" for="marketing">
+              <strong>Marketing</strong>
+              <div class="text-muted small">Envío de notificaciones promocionales y comunicaciones comerciales</div>
+            </label>
+          </div>
+          
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" name="personalizacion" id="personalizacion" {% if consentimiento.personalizacion %}checked{% endif %}>
+            <label class="form-check-label" for="personalizacion">
+              <strong>Personalización</strong>
+              <div class="text-muted small">Personalización de contenido y experiencia de usuario</div>
+            </label>
+          </div>
+          
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="investigacion" id="investigacion" {% if consentimiento.investigacion %}checked{% endif %}>
+            <label class="form-check-label" for="investigacion">
+              <strong>Investigación</strong>
+              <div class="text-muted small">Uso de datos para investigación y desarrollo (anonimizados)</div>
+            </label>
+          </div>
+          
+          <div class="text-muted small mb-3">Última actualización: {{ consentimiento.actualizado_en|date:"d/m/Y H:i" }}</div>
 
         <hr class="my-4" />
 
         <h6 class="mb-2">Datos del sistema</h6>
         <p class="mb-1 text-muted">Cuenta activa: <strong>{{ user.is_active|yesno:"Sí,No" }}</strong></p>
-        <p class="mb-0 text-muted">Creado: <strong>{{ user.date_joined }}</strong></p>
+        <p class="mb-4 text-muted">Creado: <strong>{{ user.date_joined }}</strong></p>
+
+        {# Botones de acción para toda la página #}
+        <div class="d-flex gap-2 justify-content-end">
+          <a href="{% url 'accounts:greet' %}" class="btn btn-outline-secondary">Volver</a>
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        </div>
+        </form>
       </div>
     </div>
   </main>

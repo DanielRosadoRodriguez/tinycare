@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     'blog',
     'vaccines',
     'babies',  # [ADD] Gestión de bebés (CRUD)
-    'privacy',  # [ADD] Gestión de avisos de privacidad
+    'privacy.apps.PrivacyConfig',  # [ADD] Gestión de avisos de privacidad
     'notifications.apps.NotificationsConfig'
 ]
 

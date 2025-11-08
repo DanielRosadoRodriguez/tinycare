@@ -8,6 +8,8 @@ from django.contrib.auth import get_user_model
 from ..forms.profile_form import ProfileForm
 from accounts.models.profile_parent import ProfileParent
 from accounts.models.profile_specialist import ProfileSpecialist
+from privacy.models import Consentimiento
+from privacy.forms import ConsentimientoForm
 
 
 @login_required
@@ -37,6 +39,11 @@ def profile_view(request):
         user_form = ProfileForm(request.POST, instance=user)
         if profile_model:
             profile_form = ProfileModelForm(request.POST, instance=profile)
+        
+        # Manejar también el formulario de consentimientos
+        consentimiento, created = Consentimiento.objects.get_or_create(user=user)
+        consentimiento_form = ConsentimientoForm(request.POST, instance=consentimiento)
+        
         forms_valid = user_form.is_valid() and (profile_form.is_valid() if profile_form else True)
         # Si la validación falla, comprobar explícitamente si el email enviado ya pertenece a otro usuario
         # y mostrar sólo un mensaje claro en el campo 'email' (evitar duplicados/confusión).
@@ -60,12 +67,21 @@ def profile_view(request):
                 if not profile_obj.pk:
                     profile_obj.user = user
                 profile_obj.save()
+            
+            # Guardar consentimientos si el formulario es válido
+            if consentimiento_form.is_valid():
+                consentimiento_form.save()
+            
             messages.success(request, "Perfil actualizado correctamente.")
             return redirect("accounts:profile")
     else:
         user_form = ProfileForm(instance=user)
         if profile_model:
             profile_form = ProfileModelForm(instance=profile)
+        
+        # Obtener o crear consentimiento
+        consentimiento, created = Consentimiento.objects.get_or_create(user=user)
+        consentimiento_form = ConsentimientoForm(instance=consentimiento)
 
     # determinar tipo de cuenta para la UI
     if profile and isinstance(profile, ProfileParent):
@@ -75,4 +91,14 @@ def profile_view(request):
     else:
         account_type = "Sin perfil"
 
-    return render(request, "accounts/profile.html", {"user": user, "user_form": user_form, "profile_form": profile_form, "profile": profile, "account_type": account_type})
+    # Obtener o crear consentimiento
+    consentimiento, created = Consentimiento.objects.get_or_create(user=user)
+
+    return render(request, "accounts/profile.html", {
+        "user": user,
+        "user_form": user_form,
+        "profile_form": profile_form,
+        "profile": profile,
+        "account_type": account_type,
+        "consentimiento": consentimiento
+    })

@@ -3,6 +3,7 @@ Modelos para gestión de avisos de privacidad.
 
 - PrivacyNotice: almacena versiones de avisos de privacidad en formato .md
 - PrivacyAcceptance: registra qué usuarios aceptaron qué versión del aviso
+- Consentimiento: gestiona permisos granulares por finalidad
 """
 
 from django.db import models
@@ -93,3 +94,55 @@ class PrivacyAcceptance(models.Model):
 
     def __str__(self):
         return f"{self.user.email} aceptó aviso {self.privacy_notice.id} el {self.accepted_at.strftime('%Y-%m-%d %H:%M')}"
+
+
+class Consentimiento(models.Model):
+    """
+    Gestión de consentimientos granulares por finalidad.
+    Cumple con LFPDPPP y NOM-024-SSA3-2012.
+    """
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="consentimiento",
+        verbose_name="Usuario"
+    )
+    
+    # Finalidades
+    operacion = models.BooleanField(
+        default=True,
+        verbose_name="Operativas",
+        help_text="Finalidades necesarias para el funcionamiento del servicio (requeridas)"
+    )
+    analitica = models.BooleanField(
+        default=False,
+        verbose_name="Analíticas",
+        help_text="Análisis de uso y estadísticas"
+    )
+    marketing = models.BooleanField(
+        default=False,
+        verbose_name="Marketing",
+        help_text="Envío de notificaciones promocionales y comunicaciones comerciales"
+    )
+    personalizacion = models.BooleanField(
+        default=False,
+        verbose_name="Personalización",
+        help_text="Personalización de contenido y experiencia"
+    )
+    investigacion = models.BooleanField(
+        default=False,
+        verbose_name="Investigación",
+        help_text="Uso de datos para investigación y desarrollo (anonimizados)"
+    )
+    
+    actualizado_en = models.DateTimeField(
+        auto_now=True,
+        verbose_name="Última actualización"
+    )
+
+    class Meta:
+        verbose_name = "Consentimiento"
+        verbose_name_plural = "Consentimientos"
+
+    def __str__(self):
+        return f"Consentimientos de {self.user.email}"

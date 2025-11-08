@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from privacy.models import PrivacyNotice, PrivacyAcceptance
+from privacy.models import PrivacyNotice, PrivacyAcceptance, Consentimiento
 
 
 class PrivacyNoticeForm(forms.ModelForm):
@@ -102,6 +102,36 @@ class PrivacyAcceptanceAdmin(admin.ModelAdmin):
     
     def has_change_permission(self, request, obj=None):
         """Solo lectura."""
+        return False
+    
+    def has_delete_permission(self, request, obj=None):
+        """No se pueden eliminar."""
+        return False
+
+
+@admin.register(Consentimiento)
+class ConsentimientoAdmin(admin.ModelAdmin):
+    """
+    Admin para ver y gestionar consentimientos de usuarios.
+    """
+    list_display = ("user", "operacion", "analitica", "marketing", "personalizacion", "investigacion", "actualizado_en")
+    list_filter = ("analitica", "marketing", "personalizacion", "investigacion", "actualizado_en")
+    search_fields = ("user__email",)
+    readonly_fields = ("actualizado_en",)
+    fieldsets = (
+        ("Usuario", {
+            "fields": ("user",)
+        }),
+        ("Finalidades", {
+            "fields": ("operacion", "analitica", "marketing", "personalizacion", "investigacion")
+        }),
+        ("Metadatos", {
+            "fields": ("actualizado_en",)
+        }),
+    )
+    
+    def has_add_permission(self, request):
+        """No se pueden crear manualmente (se crean automáticamente)."""
         return False
     
     def has_delete_permission(self, request, obj=None):
