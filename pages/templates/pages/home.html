@@ -175,6 +175,109 @@
     a.link-secondary{ color:#64748b; }
     a.link-secondary:hover{ color:#334155; text-decoration:none; }
     .link-light:hover{ text-decoration: underline; }
+
+    /* ===================== COMPLIANCE BANNER ===================== */
+    .compliance-banner{
+      background:
+        radial-gradient(circle at 15% 20%, rgba(59,130,246,.18), transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(45,212,191,.16), transparent 50%),
+        #eef5ff;
+      border-top: var(--tc-soft-border);
+      border-bottom: var(--tc-soft-border);
+    }
+    .compliance-card{
+      position:relative;
+      border-radius: 32px;
+      padding: clamp(2rem, 4vw, 3rem);
+      background: rgba(255,255,255,.9);
+      border: 1px solid rgba(148,163,184,.15);
+      box-shadow: 0 30px 80px rgba(15,23,42,.12);
+      overflow:hidden;
+      isolation:isolate;
+    }
+    .compliance-card::before,
+    .compliance-card::after{
+      content:"";
+      position:absolute; inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+    .compliance-card::before{
+      background: radial-gradient(circle at 10% 0%, rgba(13,110,253,.18), transparent 55%);
+      opacity:.9;
+    }
+    .compliance-card::after{
+      background: radial-gradient(circle at 80% 90%, rgba(16,185,129,.2), transparent 50%);
+      opacity:.9;
+    }
+    .compliance-card > *{ position:relative; z-index:1; }
+    .compliance-label{
+      text-transform:uppercase;
+      letter-spacing:.2em;
+      font-size:.78rem;
+      color:#0f172ab3;
+    }
+    .compliance-icon{
+      width:3.25rem; height:3.25rem;
+      border-radius:1.75rem;
+      background:linear-gradient(135deg, rgba(13,110,253,.18), rgba(236,254,255,.95));
+      display:flex; align-items:center; justify-content:center;
+      box-shadow: inset 0 0 0 1px rgba(15,23,42,.05), 0 18px 35px rgba(15,23,42,.15);
+      color:#0369a1;
+    }
+    .compliance-icon svg{ width:1.55rem; height:1.55rem; }
+    .compliance-highlight{
+      display:flex; flex-direction:column; gap:.35rem;
+    }
+    .compliance-list{
+      display:flex; flex-direction:column; gap:1.25rem;
+      margin:0; padding:0;
+      list-style:none;
+    }
+    .compliance-list li{
+      border-radius: 24px;
+      padding:1.25rem 1.5rem;
+      background: linear-gradient(120deg, rgba(255,255,255,.95), rgba(226,250,255,.9));
+      border: 1px solid rgba(148,163,184,.18);
+      box-shadow: 0 20px 40px rgba(15,23,42,.08);
+      backdrop-filter: blur(4px);
+    }
+    .law-header{
+      display:grid;
+      grid-template-columns: minmax(0,1fr) auto;
+      align-items:flex-start;
+      gap:.35rem .75rem;
+      margin-bottom:.4rem;
+    }
+    .law-title{
+      font-weight:600;
+      color:#0f172a;
+      font-size:1rem;
+      margin:0;
+    }
+    .law-tag{
+      padding:.25rem .75rem;
+      border-radius:999px;
+      font-size:.75rem;
+      background:rgba(13,110,253,.12);
+      color:#0f1f4b;
+      font-weight:600;
+      justify-self:end;
+    }
+    .law-desc{ color:var(--tc-muted); margin:0; font-size:.95rem; line-height:1.5; }
+    @media (max-width: 991px){
+      .compliance-card{
+        text-align:left;
+      }
+    }
+    @media (max-width: 575px){
+      .law-header{
+        grid-template-columns:1fr;
+      }
+      .law-tag{
+        justify-self:start;
+      }
+    }
   </style>
 </head>
 <body class="bg-white text-slate">
@@ -245,6 +348,48 @@
       </div>
     </div>
   </header>
+
+  <!-- ================= COMPLIANCE BANNER ================= -->
+  <section class="compliance-banner py-5" aria-label="Marco normativo TinyCare">
+    <div class="container">
+      <div class="compliance-card">
+        <div class="row g-4 align-items-center">
+          <div class="col-12 col-lg-6">
+            <div class="d-flex flex-nowrap align-items-center gap-3 compliance-highlight">
+              <span class="compliance-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M16 3.5l10 4v7c0 7-5 13-10 14-5-1-10-7-10-14v-7l10-4z" stroke="#0369a1" stroke-width="2" fill="rgba(255,255,255,.6)"/>
+                  <path d="M11.5 16.5l3.2 3.2 5.8-6.6" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+              <div>
+                <p class="compliance-label mb-1">Seguridad reforzada</p>
+                <h2 class="h4 mb-0">La información de tu familia está protegida con los más altos estándares de seguridad en México</h2>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6">
+            <ul class="compliance-list" aria-label="Leyes y normas respaldadas">
+              <li>
+                <div class="law-header">
+                  <span class="law-title">NOM-024-SSA3-2012</span>
+                  <span class="law-tag">Salud digital</span>
+                </div>
+                <p class="law-desc mb-0">Protegemos cada dato de salud de tu bebé con el mismo nivel de seguridad que usarías para guardar tus objetos más valiosos.</p>
+              </li>
+              <li>
+                <div class="law-header">
+                  <span class="law-title">Ley Federal de Protección de Datos Personales (LFPDPPP)</span>
+                  <span class="law-tag">Protección total</span>
+                </div>
+                <p class="law-desc mb-0">Tus datos personales y médicos están blindados bajo la máxima protección legal mexicana. Nadie más puede acceder a ellos. Nunca.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- ================= VALUE STRIPS ================= -->
   <section class="py-4 border-top">
